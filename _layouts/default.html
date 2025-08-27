@@ -1,0 +1,21 @@
+<!doctype html>
+<html>
+  <head>
+  <meta charset="utf-8">
+    <title>{{ page.title | default: site.title }}</title>
+    <link rel="stylesheet" href="{{ '/assets/css/styles.css' | relative_url }}">
+  </head>
+<body>
+    <img src="{{ '/assets/img/name text_export.png' | relative_url }}" alt="Sarah Walenciak" class="top-left-img">
+    <img src="{{ '/assets/img/digital portfolio text_export_New animation.gif' | relative_url }}" alt="Digital Portfolio" class="top-center-img">
+
+    <div class="lower-middle-container">
+      <img src="{{ '/assets/img/bubbles 2_New animation.gif' | relative_url }}" alt="Bubbles" class="bubbles-img">
+      <img src="{{ '/assets/img/box.png' | relative_url }}" alt="Box" class="box-img">
+      <main>
+        {{ content }}
+      </main>
+    </div>
+
+  </body>
+</html>

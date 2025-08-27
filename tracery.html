@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html>
+	<head>
+<p> <a href="https://ekjphd.github.io/DIG3171/">Home</a>
+<p> This template was copied from <a href="https://iloveepoetry.org/creative/tracery2htmltemplate.html">Leonardo Flores's page</a> and modified for this class.</p>
+  <meta charset="UTF-8">
+  <title>{{ page.title }}</title>
+</head>
+	<body>
+
+
+<!--
+Tracery to HTML Template
+Copyright 2023 Leonardo Flores
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the “Software”), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+-->
+	
+
+<style>
+    body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        height: 100vh;
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: lightseagreen;
+    }
+    
+    #title-container {
+        width: 100%;
+        text-align: center;
+        max-height: 300px;
+		font-size: 4em;
+    }
+    
+    @media (max-width: 600px) {
+        #title-container {
+            max-height: 200px;
+        }
+        
+        #text-container {
+            width: 100%;
+        }
+    }
+    
+    #text-container {
+        text-align: center;
+        font-size: 1.5em;
+        color: #431bf7c6;
+        margin: auto; /* Center horizontally and vertically */
+        border: 0px solid black; /* Change 0px to your desired border thickness, if desired */
+        padding: 10px;
+        width: 600px;
+    }
+
+    /* CSS for buttons and modal */
+    #button-container {
+        position: fixed;
+        bottom: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        text-align: center;
+        width: 100%;
+    }
+    
+    .button {
+        margin: 10px;
+        font-size: 2em;
+    }
+	
+    .modal {
+        display: none; /* Hidden by default */
+        position: fixed; /* Stay in place */
+        z-index: 1; /* Sit on top */
+        left: 0;
+        top: 0;
+        width: 100%; /* Full width */
+        height: 100%; /* Full height */
+        overflow: auto; /* Enable scroll if needed */
+        background-color: rgb(0,0,0); /* Fallback color */
+        background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    }
+
+    .modal-content {
+        background-color: #fefefe;
+        margin: 15% auto; /* 15% from the top and centered */
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%; /* Could be more or less, depending on screen size */
+        font-size: 2.5em;
+    }
+
+    /* The Close Button */
+    .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+    }
+</style>
+    </head>
+    <body>
+		<div id="title-container">Tracery Fun!</div>
+
+        <div id="text-container">This engine teach you the basics of Tracery grammar!</div>
+
+        <div id="button-container">
+            <button class="button" onclick="displayAbout()">About</button>
+            <button class="button" onclick="displayString()">Regenerate</button>
+        </div>
+
+        <div id="myModal" class="modal">
+            <!-- Replace the statement below with your abstract. -->
+            <div class="modal-content">
+                <span class="close">×</span>
+                <p> This is my abstract! I wrote a lot of cool things in Word or Google Docs and then pasted it into the code under the comment "Replace the statement below with your abstract" Woo.
+				</p> 
+            </div>
+        </div>
+    <script> /* In the var immediately below, copy-paste your Tracery/CBDQ JSON between the {} brackets */
+    var obj = {
+      
+	"origin": [
+		"The Doctor and his companion #companion# are #touring# #place#. She #reactToPlace# and #hasPlaceProblem#, before accidentally #gettingIntoTrouble#. The Doctor tries to save her, but in the process finds out #terribleSecret#. They #actionBeat# and #actionBeat# and finally #actionBeat#. The Doctor saves the day just in time with #doctorSkill#. The mysterious '#mysteryThing#' is hinted at yet again."
+	],
+	"companion": [
+		"#femaleFirstName# (#companionDesc#)"
+	],
+	"femaleFirstName": [
+		"Alice",
+		"Bernice",
+		"Clarabel",
+		"Margie",
+		"Pearl",
+		"Tina",
+		"Marsha",
+		"Constance",
+		"Lucy",
+		"Rosetta",
+		"Sapphire",
+		"Sky",
+		"Jules",
+		"Eliza",
+		"Nikki",
+		"Octavia",
+		"Jupiter",
+		"Vanity",
+		"Maya"
+	],
+	"companionDesc": [
+		"a young#optAdj# #jobTitle# from #place#"
+	],
+	"jobTitle": [
+		"nanny",
+		"accountant",
+		"housewife",
+		"nurse",
+		"#discipline# student",
+		"thrill-seeker",
+		"athelete",
+		"assassain",
+		"pilot",
+		"ex-soldier",
+		"librarian",
+		"author of the classic novel 'The #evocativeWord# #thrillerWord#'"
+	],
+	"discipline": [
+		"philosophy",
+		"digital humanities",
+		"high-school",
+"game design",
+		"history"
+	],
+	"optAdj": [
+		
+		", gorgeous",
+		", no-nonsense",
+		", beautiful",
+		", shy",
+		", troublemaking",
+		", talented",
+		", winsome",
+		", modern",
+		"#optAdj##optAdj"
+	],
+	"place": [
+		"#timeperiod# #area#",
+		"#area#",
+		"#specialArea#",
+		"#futureArea#"
+	],
+	"timeperiod": [
+		"ancient",
+		"19th century",
+		"war-torn",
+		"early sixties",
+		"1980s",
+		"turn of the century",
+		"present-day",
+		"near-future",
+		"far future",
+		"a parallel",
+		"'50s"
+	],
+	"area": [
+		"England",
+		"Florida",
+		"Italy",
+		"France",
+		"Germany",
+		"Luxemborg",
+		"America",
+		"Australia",
+		"Japan",
+		"Africa",
+		"Russia",
+		"California",
+		"New York",
+"Space", 
+		"Ireland"
+	],
+	"specialArea": [
+		"ancient Rome",
+		"Renaissance Italy",
+		"Edwardian England",
+		"America's Wild West",
+		"'50s New York",
+		"the outback",
+"Villaincon", 
+		"the streets",
+		"the North",
+		"high society",
+		"Pompeii",
+		"an Aztec metropolis",
+		"Napoleonic France",
+		"the roaring '20s",
+		"Atlantis"
+	],
+	"futureArea": [
+		"Earth's far future",
+		"the Martian colonies",
+		"the rings of Saturn",
+		"a dimension of pure crystal",
+		"another galaxy",
+		"the #alienWord.capitalize# moons",
+		"the #ordinal# planet of #alienWord.capitalize#",
+		"the #alienWord.capitalize# orbital",
+		"a planet-sized mall",
+		"the Planet of the Dead",
+		"the pleasure planet of #alienWord.capitalize#",
+		"a doomed asteroid",
+		"the #alienWord# mines of #alienWord.capitalize#"
+	],
+	"ordinal": [
+		"3rd",
+		"4th",
+		"5th",
+		"6th",
+		"7th",
+		"8th",
+		"9th",
+		"12th",
+		"last"
+	],
+	"alienWord": [
+		"#consonant.capitalize##vowel##consonantEnd##optAlienMod#",
+		"#vowel#'#vowel##consonantEnd##optAlienMod#",
+		"#consonant##vowel##vowel##optAlienMod#"
+	],
+	"consonant": [
+		"kr",
+		"pl",
+		"dv",
+		"st",
+		"bl"
+	],
+	"vowel": [
+		"i",
+		"ee",
+		"eh",
+		"oo",
+		"oh",
+		"uh",
+		"y"
+	],
+	"consonantEnd": [
+		"k",
+		"ck",
+		"t",
+		"d",
+		"g",
+		"z",
+		"m",
+		"n",
+		"pp"
+	],
+	"optAlienMod": [
+		"",
+		"",
+		" #alienMod#"
+	],
+	"alienMod": [
+		"Prime",
+		"2",
+		"Ascending",
+		"Matrix",
+		"Nova",
+		"#thrillerWord.capitalize#"
+	],
+	"touring": [
+		"visiting",
+		"crashing",
+		"studying",
+		"vacationing in",
+		"relaxing in",
+		"stuck in",
+		"detouring through",
+		"on a mission in",
+		"undercover in",
+		"passing through",
+		"investigating a mysterious signal in",
+		"accidentally in"
+	],
+	"reactToPlace": [
+		"confuses the locals",
+		"misunderstands the customs",
+		"says lots of anachronistic things",
+		"flirts with the Doctor",
+		"teases the Doctor",
+		"pretends to be annoyed with the Doctor",
+		"enjoys the local cuisine",
+		"brings up her ex-boyfriend",
+		"befriends a street urchin",
+		"adopts a stray cat",
+		"goes looking for adventure",
+		"pokes fun at the locals",
+		"complains about the detour",
+		"enjoys the scenery"
+	],
+	"hasPlaceProblem": [
+		"can't get anyone to understand her accent",
+		"is accosted by a creepy street preacher",
+		"steps in a mud puddle",
+		"locks herself out of the TARDIS",
+		"gets ripped off by a con artist",
+		"meets a mysterious woman in a shroud",
+		"is troubled by a strange statue",
+		"can't shake a strange feeling of dread",
+		"loses her phone",
+		"gets lost",
+		"#reactToPlace#"
+	],
+	"gettingIntoTrouble": [
+		"getting arrested",
+		"being kidnapped by #villains#",
+		"offending a powerful figure",
+		"running afoul of #villains#",
+		"walking right into a plot by #villains#"
+	],
+	"terribleSecret": [
+		"#villains# are planning an invasion",
+		"someone is stealing the children",
+		"something has drained the TARDIS's energy cells",
+		"#villains# are planning to open a portal to another universe",
+		"#villains# are living under the ground",
+		"#villains# are planning to kidnap him",
+		"#villains# are planning to get revenge",
+		"things are not what they seem",
+		"#villains# have enslaved the minds of nearly all the locals",
+		"#villains# have a plan to restart the Time War",
+		"#villains# and #villains# are working together"
+	],
+	"villains": [
+		"#classicVillains#",
+		"#proceduralAliens#",
+		"#proceduralAliens#"
+	],
+	"classicVillains": [
+		"the Daleks",
+		"the Daleks",
+		"the Cybermen",
+		"the Cybermen",
+		"Davros's #minions#",
+		"the Master's #minions#",
+		"the Dream Lords",
+		"the Fendahl",
+		"a trio of parallel universe Doctors turned evil",
+		"the Valeyard's #minions#",
+		"the Weeping Angels",
+		"Time Zombies",
+		"The Silence",
+		"the Ood",
+		"Plasmavores",
+		"the Sontarans",
+		"sentient mannequins"
+	],
+	"minions": [
+		"minions",
+		"henchmen",
+		"slaves",
+		"servants",
+		"clones",
+		"thugs",
+		"monsters",
+		"#alienAdj# things"
+	],
+	"proceduralAliens": [
+		"#alienAdj# #alienBaseType##optAlienModifier#"
+	],
+	"alienAdj": [
+		"slimy",
+		"oozey",
+		"invisible",
+		"half-reptile",
+		"hyperintelligent",
+		"blue",
+		"Venusian",
+		"super-fast",
+		"hairless",
+		"undead",
+		"de-phased",
+		"hideous",
+		"giant",
+		"bad CGI",
+		"razor-jawed",
+		"genetically altered"
+	],
+	"alienBaseType": [
+		"insect people",
+		"pigmen",
+		"robots",
+		"cyborgs",
+		"ratmen",
+		"aliens",
+		"ghosts",
+		"plant people",
+		"spiders",
+		"lawyers",
+		"brains",
+		"vampires",
+		"leech-things",
+		"land sharks",
+		"snake people",
+		"cat people",
+		"clones",
+		"zealots",
+		"psychics",
+		"shadows"
+	],
+	"optAlienModifier": [
+		"",
+		" #alienModifier#"
+	],
+	"alienModifier": [
+		"#mod1#",
+		"#mod1#",
+		"#mod1# (#workingwith# #villains#)"
+	],
+	"workingwith": [
+		"working with",
+		"sent by",
+		"in collusion with",
+		"enslaved by"
+	],
+	"mod1": [
+		"who live backwards in time",
+		"from the future",
+		"from the distant past",
+		"from a dying Earth",
+		"with a grudge",
+		"(the last of their race)",
+		"with no sense of morality",
+		"with no sense of humor",
+		"(not seen since the last season)",
+		"who crave only pain",
+		"who feed off the nightmares of children",
+		"who hate the human race",
+		"with disturbingly long teeth",
+		"distilled from nightmares",
+		"(escapees from a Time Prison)",
+		"with glowing red eyes",
+		"with no faces",
+		"with a death ray",
+		"with a supernova bomb"
+	],
+	"actionBeat": [
+		"run down some corridors",
+		"cleverly escape from a prison cell",
+		"get separated",
+		"enlist the help of a local #localperson#",
+		"recruit some local #localpeople#",
+		"are almost captured",
+		"narrowly escape a gruesome death"
+	],
+	"doctorSkill": [
+		"his wits",
+		"dashing good looks",
+		"his sonic screwdriver",
+		"his psychic link to the TARDIS",
+		"Gallifrean powers of self-control",
+		"his knowledge of quantum mathematics",
+		"his keen understanding of the human condition",
+		"math",
+		"his vast knowledge of alien psychology",
+		"something that looks like a gun at first but turns out not to be a gun",
+		"something not very well explained to do with love and psychic energy"
+	],
+	"mysteryThing": [
+		"#color.capitalize# #symbol.capitalize#",
+		"#evocativeWord#",
+		"#femaleFirstName# #thrillerWord#",
+		"#evocativeWord# #thrillerWord#"
+	],
+	"color": [
+		"red",
+		"blue",
+		"yellow",
+		"green",
+		"black",
+		"white"
+	],
+	"symbol": [
+		"square",
+		"star",
+		"sphere"
+	],
+	"evocativeWord": [
+		"Returning",
+		"Message",
+		"Pattern",
+		"Summoning",
+		"Destiny",
+		"Endgame",
+		"Nevertime",
+		"Oneness",
+		"Whisper",
+		"Death"
+	],
+	"thrillerWord": [
+		"Pardox",
+		"Parable",
+		"Quadrant",
+		"Element",
+		"Conundrum",
+		"Solution",
+		"Event",
+		"Conspiracy",
+		"Quorum",
+		"Diary",
+		"Intention",
+		"Secret",
+		"Identity",
+		"Concordance",
+		"Division",
+		"Incision",
+		"Countdown",
+		"#ordinal.capitalize#"
+	],
+	"localperson": [
+		"vicar",
+		"dog catcher",
+		"electrician",
+		"professor",
+		"historian",
+		"police officer",
+		"street artist",
+		"urchin",
+		"teenager",
+		"slacker",
+		"comic book fan",
+		"toymaker",
+		"street vendor"
+	],
+	"localpeople": [
+		"children",
+		"grad students",
+		"grandmothers",
+		"asylum inmates",
+		"paranormal investigators",
+		"police officers",
+		"bar patrons",
+		"artists",
+		"musicians",
+		"sports fans"
+	]
+
+}
+function generateString(rule) {
+  return expandRule(rule);
+}
+
+function expandRule(rule) {
+  var result = rule;
+  var match = /#(\w+(?:\.\w+)*)#/.exec(result);
+  while (match) {
+    var tag = match[1];
+    var replacement = handleTag(tag);
+    result = result.replace(match[0], replacement);
+    match = /#(\w+(?:\.\w+)*)#/.exec(result);
+  }
+  return result;
+}
+
+function handleTag(tag) {
+  var parts = tag.split('.');
+  var key = parts[0];
+  var modifiers = parts.slice(1);
+  
+  if (!obj[key]) return "#" + tag + "#";
+  
+  var selected = obj[key][Math.floor(Math.random() * obj[key].length)];
+  var result = expandRule(selected);
+  
+  // Apply modifiers
+  if (modifiers.includes('capitalize') && result.length > 0) {
+    result = result.charAt(0).toUpperCase() + result.slice(1);
+  }
+  
+  return result;
+}
+
+function displayString() {
+    var randomIndex = Math.floor(Math.random() * obj.origin.length);
+    document.getElementById('text-container').innerHTML = generateString(obj.origin[randomIndex]);
+}
+
+    displayString();  // call once at the beginning
+    setInterval(displayString, 30000);  // call every 30 seconds
+            // Get the modal
+            var modal = document.getElementById("myModal");
+
+            // Get the <span> element that closes the modal
+            var span = document.getElementsByClassName("close")[0];
+
+            // When the user clicks on <span> (x), close the modal
+            span.onclick = function() {
+                modal.style.display = "none";
+            }
+
+            // When the user clicks anywhere outside of the modal, close it
+            window.onclick = function(event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+            }
+
+            // Function to display the about modal
+            function displayAbout() {
+                modal.style.display = "block";
+            }
+		    function goFullscreen() {
+        if (document.documentElement.requestFullscreen) {
+            document.documentElement.requestFullscreen();
+        } else if (document.documentElement.mozRequestFullScreen) { // Firefox
+            document.documentElement.mozRequestFullScreen();
+        } else if (document.documentElement.webkitRequestFullscreen) { // Chrome, Safari and Opera
+            document.documentElement.webkitRequestFullscreen();
+        } else if (document.documentElement.msRequestFullscreen) { // IE/Edge
+            document.documentElement.msRequestFullscreen();
+        }
+    }
+
+    
+</script>
+
+
+<iframe id="IgP8dKVP" frameborder="0" src="./grammar2_files/translateSandbox.html" style="width: 0px; height: 0px; display: none;"></iframe></body></html>
