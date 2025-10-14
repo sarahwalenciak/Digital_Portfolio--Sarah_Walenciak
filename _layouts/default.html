@@ -6,13 +6,23 @@
     <link rel="stylesheet" href="{{ '/assets/css/styles.css' | relative_url }}">
   </head>
 <body>
-    <img src="{{ '/assets/img/name text_export.png' | relative_url }}" alt="Sarah Walenciak" class="top-left-img">
-    <img src="{{ '/assets/img/digital portfolio text_export_New animation.gif' | relative_url }}" alt="Digital Portfolio" class="top-center-img">
+  <div class="header-border">
+  
+        <nav class="main-nav">
+      <ul>
+        <li><a href="{{ '/' | relative_url }}">Home</a></li>
+        <li><a href="{{ '/tracery.html' | relative_url }}">Tracery</a></li>
+        <li><a href="{{ '/researchproject.html' | relative_url }}">Research Project</a></li>
+        <li><a href="{{ '/distantreading.html' | relative_url }}">Distant Reading</a></li>
+        <li><a href="{{ '/game.html' | relative_url }}">Game</a></li>
+      </ul>
+    </nav>
+  </div>
+
+</div>
 
     <div class="lower-middle-container">
-      <img src="{{ '/assets/img/bubbles 2_New animation.gif' | relative_url }}" alt="Bubbles" class="bubbles-img">
-      <img src="{{ '/assets/img/box.png' | relative_url }}" alt="Box" class="box-img">
-      <main>
+      <main class="main-border">
         {{ content }}
       </main>
     </div>

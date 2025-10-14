@@ -1,672 +1,1106 @@
 <!DOCTYPE html>
-<html>
-	<head>
-<p> <a href="https://ekjphd.github.io/DIG3171/">Home</a>
-<p> This template was copied from <a href="https://iloveepoetry.org/creative/tracery2htmltemplate.html">Leonardo Flores's page</a> and modified for this class.</p>
-  <meta charset="UTF-8">
-  <title>{{ page.title }}</title>
-</head>
-	<body>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tracery Project</title>
+    <style>
+/* Custom font was used here, commented out for readability. Might be reused at some point */
+        /* @font-face {
+          font-family: 'bob'; 
+          src: url('assets/fonts/bob.woff') format('woff'); 
+        } */
+
+        body { font-family: sans-serif; padding: 2em; }
+        #output {    
+            border: 1px solid #ccc;
+            padding: 1em;
+            min-height: 50px;
+            max-height: 400px;
+            width: 100%; 
+            overflow-y: auto;
+            background-color: #f9f9f9; }
 
 
-<!--
-Tracery to HTML Template
-Copyright 2023 Leonardo Flores
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the “Software”), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
--->
-	
-
-<style>
-    body {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: flex-start;
-        height: 100vh;
-        font-family: Arial, sans-serif;
-        margin: 0;
-        padding: 0;
-        background-color: lightseagreen;
-    }
-    
-    #title-container {
-        width: 100%;
-        text-align: center;
-        max-height: 300px;
-		font-size: 4em;
-    }
-    
-    @media (max-width: 600px) {
-        #title-container {
-            max-height: 200px;
+        #output > div {
+            font-family: 'sans-serif', serif; 
+            font-size: 1em; 
+            line-height: 1.4;
+            margin-bottom: 0.75em;
+            padding-bottom: 0.75em;
+            border-bottom: 1px solid #eee;
         }
-        
-        #text-container {
+        #output > div:last-child { border-bottom: none; }
+        button { font-size: 1.2em; padding: 0.5em 1em; margin-top: 1em; cursor: pointer; }
+
+        /* Modal overlay for diagnostic button */
+        #modal-overlay {
+            position: fixed; 
+            left: 0;
+            top: 0;
             width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5); 
+            z-index: 1000; 
+            justify-content: center;
+            align-items: center;
+            display: none; 
         }
-    }
-    
-    #text-container {
-        text-align: center;
-        font-size: 1.5em;
-        color: #431bf7c6;
-        margin: auto; /* Center horizontally and vertically */
-        border: 0px solid black; /* Change 0px to your desired border thickness, if desired */
-        padding: 10px;
-        width: 600px;
-    }
 
-    /* CSS for buttons and modal */
-    #button-container {
-        position: fixed;
-        bottom: 10px;
-        left: 50%;
-        transform: translateX(-50%);
-        text-align: center;
-        width: 100%;
-    }
-    
-    .button {
-        margin: 10px;
-        font-size: 2em;
-    }
-	
-    .modal {
-        display: none; /* Hidden by default */
-        position: fixed; /* Stay in place */
-        z-index: 1; /* Sit on top */
-        left: 0;
-        top: 0;
-        width: 100%; /* Full width */
-        height: 100%; /* Full height */
-        overflow: auto; /* Enable scroll if needed */
-        background-color: rgb(0,0,0); /* Fallback color */
-        background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-    }
+        #modal-overlay.visible {
+            display: flex; 
+        }
 
-    .modal-content {
-        background-color: #fefefe;
-        margin: 15% auto; /* 15% from the top and centered */
-        padding: 20px;
-        border: 1px solid #888;
-        width: 80%; /* Could be more or less, depending on screen size */
-        font-size: 2.5em;
-    }
+        #modal-content {
+            background-color: #fefefe;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 700px;
+            max-height: 80vh; 
+            overflow-y: auto; 
+            position: relative;
+            box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+        }
 
-    /* The Close Button */
-    .close {
-        color: #aaa;
-        float: right;
-        font-size: 28px;
-        font-weight: bold;
-    }
-</style>
-    </head>
-    <body>
-		<div id="title-container">Tracery Fun!</div>
+        #modal-close-btn {
+            color: #aaa;
+            position: absolute;
+            top: 5px;
+            right: 15px;
+            font-size: 28px;
+            font-weight: bold;
+            border: none;
+            background: none;
+            cursor: pointer;
+            padding: 0;
+            margin-top: 0;
+        }
 
-        <div id="text-container">This engine teach you the basics of Tracery grammar!</div>
+        #modal-content pre {
+            white-space: pre-wrap; 
+            word-wrap: break-word;
+            background-color: #f4f4f4;
+            border: 1px solid #ddd;
+            padding: 1em;
+        }
 
-        <div id="button-container">
-            <button class="button" onclick="displayAbout()">About</button>
-            <button class="button" onclick="displayString()">Regenerate</button>
+        /* Page layout */
+        .page-content {
+            max-width: 1000px;
+            margin: 2em auto;
+        }
+
+        #generator-container, #introduction-above, #introduction-below {
+            margin-bottom: 2em;
+        }
+
+        #introduction-above, #introduction-below {
+            text-align: center; 
+        }
+
+        #generator-container h3 {
+            text-align: center; 
+        }
+
+        .button-container {
+            text-align: center;
+        }
+
+
+        .page-content {
+            line-height: 1.6; 
+        }
+
+        .page-content h2,
+        .page-content h3 {
+            margin-top: 2em;
+        }
+
+        .page-content p {
+            margin-bottom: 1em; 
+            text-align: justify; 
+        }
+
+        .page-content ul {
+            padding-left: 25px;
+            margin-bottom: 1em;
+            text-align: left;
+        }
+
+        .page-content li {
+            margin-bottom: 0.75em;
+            padding-left: 5px; 
+        }
+
+
+        /* Collapsible table */
+        details {
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-top: 1em;
+            background-color: #f9f9f9;
+        }
+
+        summary {
+            padding: 0.75em;
+            font-weight: bold;
+            cursor: pointer;
+            outline: none;
+        }
+
+        details[open] > summary {
+            border-bottom: 1px solid #ddd;
+        }
+
+    </style>
+</head>
+<body>
+<li><a href="/Digital_Portfolio--Sarah_Walenciak/">Home</a></li>
+    <div class="page-content">
+
+        
+        <div id="introduction-above">
+            <h2>Introduction</h2> <p>This project is a text generator created using Tracery, designed to emulate how speech can become disorganized in the context of neurological or psychiatric conditions. Specifically, the generator aims to model Formal Thought Disorder (FTD), a condition marked by disruptions in the structure of language and thought processes. This condition is observed across various neuropsychiatric disorders, including schizophrenia, major depressive disorder, and mania, among others (Kircher et al. 515). Within the context of schizophrenia, linguists refer to the manifestation of thought disorder as ‘schizophasia’ (Niedźwiadek and Szulc 2).</p>
+            <p>Clinically, FTD symptoms are categorized as negative (the absence of typical features) or positive (the presence of atypical features). Negative FTD is characterized by a deficit in speech production, while positive FTD encompasses several different phenomena which often lead to irregular, fragmented, or incoherent communication (Kuperberg 578). These phenomena have been described and catalogued in several clinical rating scales, the most widely used being the Scale for the Assessment of Thought, Language, and Communication (TLC) by Dr. Nancy Andreasen. The 18 items included on the scale are listed and briefly described in the table below.</p>         
+
+            <details>
+                <summary>Scale for the Assessment of Thought, Language, and Communication </summary>
+                <table class="MsoTableGrid" border="1" cellspacing="0" cellpadding="0" style="border-collapse:collapse;border:none">
+                    <tbody>
+                        <tr>
+  <td width="312" valign="top" style="width:233.75pt;border:solid windowtext 1.0pt;
+  padding:0in 5.4pt 0in 5.4pt">
+  <p class="MsoNormal" style="margin-bottom:0in;line-height:normal"><b>Poverty of
+  Speech</b></p>
+  </td>
+  <td width="312" valign="top" style="width:233.75pt;border:solid windowtext 1.0pt;
+  border-left:none;padding:0in 5.4pt 0in 5.4pt">
+  <p class="MsoNormal" style="margin-bottom:0in;line-height:normal">A restriction
+  in the amount of spontaneous speech, resulting in brief, concrete, and
+  unelaborated replies (Andreasen 1318).</p>
+  </td>
+ </tr>
+ <tr>
+  <td width="312" valign="top" style="width:233.75pt;border:solid windowtext 1.0pt;
+  border-top:none;padding:0in 5.4pt 0in 5.4pt">
+  <p class="MsoNormal" style="margin-bottom:0in;line-height:normal"><b>Poverty of
+  Content of Speech</b></p>
+  </td>
+  <td width="312" valign="top" style="width:233.75pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+  padding:0in 5.4pt 0in 5.4pt">
+  <p class="MsoNormal" style="margin-bottom:0in;line-height:normal">Speech that
+  is adequate in length but conveys little information because it is vague,
+  repetitive, or stereotyped (1318).</p>
+  </td>
+ </tr>
+ <tr>
+  <td width="312" valign="top" style="width:233.75pt;border:solid windowtext 1.0pt;
+  border-top:none;padding:0in 5.4pt 0in 5.4pt">
+  <p class="MsoNormal" style="margin-bottom:0in;line-height:normal"><b>Pressure
+  of Speech</b></p>
+  </td>
+  <td width="312" valign="top" style="width:233.75pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+  padding:0in 5.4pt 0in 5.4pt">
+  <p class="MsoNormal" style="margin-bottom:0in;line-height:normal">An increase
+  in the amount of spontaneous speech, characterized by rapid talking that is
+  difficult to interrupt (1318).</p>
+  </td>
+ </tr>
+ <tr>
+  <td width="312" valign="top" style="width:233.75pt;border:solid windowtext 1.0pt;
+  border-top:none;padding:0in 5.4pt 0in 5.4pt">
+  <p class="MsoNormal" style="margin-bottom:0in;line-height:normal"><b>Distractible
+  Speech</b></p>
+  </td>
+  <td width="312" valign="top" style="width:233.75pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+  padding:0in 5.4pt 0in 5.4pt">
+  <p class="MsoNormal" style="margin-bottom:0in;line-height:normal">When a person
+  stops talking mid-sentence to change the subject in response to a nearby
+  stimulus (1318).</p>
+  </td>
+ </tr>
+ <tr>
+  <td width="312" valign="top" style="width:233.75pt;border:solid windowtext 1.0pt;
+  border-top:none;padding:0in 5.4pt 0in 5.4pt">
+  <p class="MsoNormal" style="margin-bottom:0in;line-height:normal"><b>Tangentiality</b></p>
+  </td>
+  <td width="312" valign="top" style="width:233.75pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+  padding:0in 5.4pt 0in 5.4pt">
+  <p class="MsoNormal" style="margin-bottom:0in;line-height:normal">Replying to a
+  question in an oblique, tangential, or even irrelevant manner (1318)</p>
+  </td>
+ </tr>
+ <tr>
+  <td width="312" valign="top" style="width:233.75pt;border:solid windowtext 1.0pt;
+  border-top:none;padding:0in 5.4pt 0in 5.4pt">
+  <p class="MsoNormal" style="margin-bottom:0in;line-height:normal"><b>Derailment</b></p>
+  </td>
+  <td width="312" valign="top" style="width:233.75pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+  padding:0in 5.4pt 0in 5.4pt">
+  <p class="MsoNormal" style="margin-bottom:0in;line-height:normal">A pattern of
+  spontaneous speech where ideas slip from one topic to another that is either
+  unrelated or only vaguely connected (1319).</p>
+  </td>
+ </tr>
+ <tr>
+  <td width="312" valign="top" style="width:233.75pt;border:solid windowtext 1.0pt;
+  border-top:none;padding:0in 5.4pt 0in 5.4pt">
+  <p class="MsoNormal" style="margin-bottom:0in;line-height:normal"><b>Incoherence</b></p>
+  </td>
+  <td width="312" valign="top" style="width:233.75pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+  padding:0in 5.4pt 0in 5.4pt">
+  <p class="MsoNormal" style="margin-bottom:0in;line-height:normal">Speech that
+  is essentially incomprehensible, where words or phrases seem to be joined
+  together arbitrarily (1319).</p>
+  </td>
+ </tr>
+ <tr>
+  <td width="312" valign="top" style="width:233.75pt;border:solid windowtext 1.0pt;
+  border-top:none;padding:0in 5.4pt 0in 5.4pt">
+  <p class="MsoNormal" style="margin-bottom:0in;line-height:normal"><b>Illogicality</b></p>
+  </td>
+  <td width="312" valign="top" style="width:233.75pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+  padding:0in 5.4pt 0in 5.4pt">
+  <p class="MsoNormal" style="margin-bottom:0in;line-height:normal">A pattern of
+  speech where conclusions are reached that do not logically follow from the
+  statements made (1320).</p>
+  </td>
+ </tr>
+ <tr>
+  <td width="312" valign="top" style="width:233.75pt;border:solid windowtext 1.0pt;
+  border-top:none;padding:0in 5.4pt 0in 5.4pt">
+  <p class="MsoNormal" style="margin-bottom:0in;line-height:normal"><b>Clanging</b></p>
+  </td>
+  <td width="312" valign="top" style="width:233.75pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+  padding:0in 5.4pt 0in 5.4pt">
+  <p class="MsoNormal" style="margin-bottom:0in;line-height:normal">Speech where
+  the choice of words is governed by their sounds (e.g., rhymes, puns) rather
+  than their meaning (1320).</p>
+  </td>
+ </tr>
+ <tr>
+  <td width="312" valign="top" style="width:233.75pt;border:solid windowtext 1.0pt;
+  border-top:none;padding:0in 5.4pt 0in 5.4pt">
+  <p class="MsoNormal" style="margin-bottom:0in;line-height:normal"><b>Neologisms</b></p>
+  </td>
+  <td width="312" valign="top" style="width:233.75pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+  padding:0in 5.4pt 0in 5.4pt">
+  <p class="MsoNormal" style="margin-bottom:0in;line-height:normal">The creation
+  of completely new words or phrases whose derivation cannot be understood (1320).</p>
+  </td>
+ </tr>
+ <tr>
+  <td width="312" valign="top" style="width:233.75pt;border:solid windowtext 1.0pt;
+  border-top:none;padding:0in 5.4pt 0in 5.4pt">
+  <p class="MsoNormal" style="margin-bottom:0in;line-height:normal"><b>Word
+  Approximations</b></p>
+  </td>
+  <td width="312" valign="top" style="width:233.75pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+  padding:0in 5.4pt 0in 5.4pt">
+  <p class="MsoNormal" style="margin-bottom:0in;line-height:normal">The use of
+  old words in new ways or new words created by conventional rules, where the
+  meaning is often evident (e.g., "handshoes" for gloves) (1320).</p>
+  </td>
+ </tr>
+ <tr>
+  <td width="312" valign="top" style="width:233.75pt;border:solid windowtext 1.0pt;
+  border-top:none;padding:0in 5.4pt 0in 5.4pt">
+  <p class="MsoNormal" style="margin-bottom:0in;line-height:normal"><b>Circumstantiality</b></p>
+  </td>
+  <td width="312" valign="top" style="width:233.75pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+  padding:0in 5.4pt 0in 5.4pt">
+  <p class="MsoNormal" style="margin-bottom:0in;line-height:normal">A very
+  indirect pattern of speech that is delayed in reaching its goal because of
+  many tedious details and parenthetical remarks (1320).</p>
+  </td>
+ </tr>
+ <tr>
+  <td width="312" valign="top" style="width:233.75pt;border:solid windowtext 1.0pt;
+  border-top:none;padding:0in 5.4pt 0in 5.4pt">
+  <p class="MsoNormal" style="margin-bottom:0in;line-height:normal"><b>Loss of
+  Goal</b></p>
+  </td>
+  <td width="312" valign="top" style="width:233.75pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+  padding:0in 5.4pt 0in 5.4pt">
+  <p class="MsoNormal" style="margin-bottom:0in;line-height:normal">The failure
+  to follow a chain of thought to its natural conclusion; the person wanders
+  away from the subject and never returns to it (1320).</p>
+  </td>
+ </tr>
+ <tr>
+  <td width="312" valign="top" style="width:233.75pt;border:solid windowtext 1.0pt;
+  border-top:none;padding:0in 5.4pt 0in 5.4pt">
+  <p class="MsoNormal" style="margin-bottom:0in;line-height:normal"><b>Perseveration</b></p>
+  </td>
+  <td width="312" valign="top" style="width:233.75pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+  padding:0in 5.4pt 0in 5.4pt">
+  <p class="MsoNormal" style="margin-bottom:0in;line-height:normal">The
+  persistent repetition of words, ideas, or subjects (1320).</p>
+  </td>
+ </tr>
+ <tr>
+  <td width="312" valign="top" style="width:233.75pt;border:solid windowtext 1.0pt;
+  border-top:none;padding:0in 5.4pt 0in 5.4pt">
+  <p class="MsoNormal" style="margin-bottom:0in;line-height:normal"><b>Echolalia</b></p>
+  </td>
+  <td width="312" valign="top" style="width:233.75pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+  padding:0in 5.4pt 0in 5.4pt">
+  <p class="MsoNormal" style="margin-bottom:0in;line-height:normal">A pattern of
+  speech in which the person echoes the words or phrases of the interviewer (1321).</p>
+  </td>
+ </tr>
+ <tr>
+  <td width="312" valign="top" style="width:233.75pt;border:solid windowtext 1.0pt;
+  border-top:none;padding:0in 5.4pt 0in 5.4pt">
+  <p class="MsoNormal" style="margin-bottom:0in;line-height:normal"><b>Blocking</b></p>
+  </td>
+  <td width="312" valign="top" style="width:233.75pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+  padding:0in 5.4pt 0in 5.4pt">
+  <p class="MsoNormal" style="margin-bottom:0in;line-height:normal">The
+  interruption of a train of speech before an idea has been completed, after
+  which the person cannot recall what they meant to say (1321).</p>
+  </td>
+ </tr>
+ <tr>
+  <td width="312" valign="top" style="width:233.75pt;border:solid windowtext 1.0pt;
+  border-top:none;padding:0in 5.4pt 0in 5.4pt">
+  <p class="MsoNormal" style="margin-bottom:0in;line-height:normal"><b>Stilted
+  Speech</b></p>
+  </td>
+  <td width="312" valign="top" style="width:233.75pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+  padding:0in 5.4pt 0in 5.4pt">
+  <p class="MsoNormal" style="margin-bottom:0in;line-height:normal">Speech that
+  has an excessively formal, pompous, quaint, or overpolite quality (1321).</p>
+  </td>
+ </tr>
+ <tr>
+  <td width="312" valign="top" style="width:233.75pt;border:solid windowtext 1.0pt;
+  border-top:none;padding:0in 5.4pt 0in 5.4pt">
+  <p class="MsoNormal" style="margin-bottom:0in;line-height:normal"><b>Self-reference</b></p>
+  </td>
+  <td width="312" valign="top" style="width:233.75pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+  padding:0in 5.4pt 0in 5.4pt">
+  <p class="MsoNormal" style="margin-bottom:0in;line-height:normal">When a
+  patient repeatedly refers the subject under discussion back to themselves,
+  even when the topic is neutral (1321).</p>
+  </td>
+ </tr>
+                    </tbody>
+                </table>
+            </details>
+            <p> To cover every single one of these symptoms would be far beyond the scope of this project. The generator was mainly programmed to demonstrate clanging and neologisms, but other items on the scale also come through, either as a consequence of what was deliberately included, or entirely coincidentally. Also included in the generator are several examples taken from patient interviews, the only alterations being the replacement of their nouns, verbs, and adjectives with Tracery rules.</p>
         </div>
 
-        <div id="myModal" class="modal">
-            <!-- Replace the statement below with your abstract. -->
-            <div class="modal-content">
-                <span class="close">×</span>
-                <p> This is my abstract! I wrote a lot of cool things in Word or Google Docs and then pasted it into the code under the comment "Replace the statement below with your abstract" Woo.
-				</p> 
+        <div id="generator-container">
+            <h3>Output:</h3>
+            <div id="output"></div>
+            <div class="button-container">
+                <button id="generateBtn" onclick="generate()">Generate New Text</button>
+                <button id="diagBtn" style="margin-left:.5em;">Show Diagnostics</button>
             </div>
         </div>
-    <script> /* In the var immediately below, copy-paste your Tracery/CBDQ JSON between the {} brackets */
-    var obj = {
-      
-	"origin": [
-		"The Doctor and his companion #companion# are #touring# #place#. She #reactToPlace# and #hasPlaceProblem#, before accidentally #gettingIntoTrouble#. The Doctor tries to save her, but in the process finds out #terribleSecret#. They #actionBeat# and #actionBeat# and finally #actionBeat#. The Doctor saves the day just in time with #doctorSkill#. The mysterious '#mysteryThing#' is hinted at yet again."
-	],
-	"companion": [
-		"#femaleFirstName# (#companionDesc#)"
-	],
-	"femaleFirstName": [
-		"Alice",
-		"Bernice",
-		"Clarabel",
-		"Margie",
-		"Pearl",
-		"Tina",
-		"Marsha",
-		"Constance",
-		"Lucy",
-		"Rosetta",
-		"Sapphire",
-		"Sky",
-		"Jules",
-		"Eliza",
-		"Nikki",
-		"Octavia",
-		"Jupiter",
-		"Vanity",
-		"Maya"
-	],
-	"companionDesc": [
-		"a young#optAdj# #jobTitle# from #place#"
-	],
-	"jobTitle": [
-		"nanny",
-		"accountant",
-		"housewife",
-		"nurse",
-		"#discipline# student",
-		"thrill-seeker",
-		"athelete",
-		"assassain",
-		"pilot",
-		"ex-soldier",
-		"librarian",
-		"author of the classic novel 'The #evocativeWord# #thrillerWord#'"
-	],
-	"discipline": [
-		"philosophy",
-		"digital humanities",
-		"high-school",
-"game design",
-		"history"
-	],
-	"optAdj": [
-		
-		", gorgeous",
-		", no-nonsense",
-		", beautiful",
-		", shy",
-		", troublemaking",
-		", talented",
-		", winsome",
-		", modern",
-		"#optAdj##optAdj"
-	],
-	"place": [
-		"#timeperiod# #area#",
-		"#area#",
-		"#specialArea#",
-		"#futureArea#"
-	],
-	"timeperiod": [
-		"ancient",
-		"19th century",
-		"war-torn",
-		"early sixties",
-		"1980s",
-		"turn of the century",
-		"present-day",
-		"near-future",
-		"far future",
-		"a parallel",
-		"'50s"
-	],
-	"area": [
-		"England",
-		"Florida",
-		"Italy",
-		"France",
-		"Germany",
-		"Luxemborg",
-		"America",
-		"Australia",
-		"Japan",
-		"Africa",
-		"Russia",
-		"California",
-		"New York",
-"Space", 
-		"Ireland"
-	],
-	"specialArea": [
-		"ancient Rome",
-		"Renaissance Italy",
-		"Edwardian England",
-		"America's Wild West",
-		"'50s New York",
-		"the outback",
-"Villaincon", 
-		"the streets",
-		"the North",
-		"high society",
-		"Pompeii",
-		"an Aztec metropolis",
-		"Napoleonic France",
-		"the roaring '20s",
-		"Atlantis"
-	],
-	"futureArea": [
-		"Earth's far future",
-		"the Martian colonies",
-		"the rings of Saturn",
-		"a dimension of pure crystal",
-		"another galaxy",
-		"the #alienWord.capitalize# moons",
-		"the #ordinal# planet of #alienWord.capitalize#",
-		"the #alienWord.capitalize# orbital",
-		"a planet-sized mall",
-		"the Planet of the Dead",
-		"the pleasure planet of #alienWord.capitalize#",
-		"a doomed asteroid",
-		"the #alienWord# mines of #alienWord.capitalize#"
-	],
-	"ordinal": [
-		"3rd",
-		"4th",
-		"5th",
-		"6th",
-		"7th",
-		"8th",
-		"9th",
-		"12th",
-		"last"
-	],
-	"alienWord": [
-		"#consonant.capitalize##vowel##consonantEnd##optAlienMod#",
-		"#vowel#'#vowel##consonantEnd##optAlienMod#",
-		"#consonant##vowel##vowel##optAlienMod#"
-	],
-	"consonant": [
-		"kr",
-		"pl",
-		"dv",
-		"st",
-		"bl"
-	],
-	"vowel": [
-		"i",
-		"ee",
-		"eh",
-		"oo",
-		"oh",
-		"uh",
-		"y"
-	],
-	"consonantEnd": [
-		"k",
-		"ck",
-		"t",
-		"d",
-		"g",
-		"z",
-		"m",
-		"n",
-		"pp"
-	],
-	"optAlienMod": [
-		"",
-		"",
-		" #alienMod#"
-	],
-	"alienMod": [
-		"Prime",
-		"2",
-		"Ascending",
-		"Matrix",
-		"Nova",
-		"#thrillerWord.capitalize#"
-	],
-	"touring": [
-		"visiting",
-		"crashing",
-		"studying",
-		"vacationing in",
-		"relaxing in",
-		"stuck in",
-		"detouring through",
-		"on a mission in",
-		"undercover in",
-		"passing through",
-		"investigating a mysterious signal in",
-		"accidentally in"
-	],
-	"reactToPlace": [
-		"confuses the locals",
-		"misunderstands the customs",
-		"says lots of anachronistic things",
-		"flirts with the Doctor",
-		"teases the Doctor",
-		"pretends to be annoyed with the Doctor",
-		"enjoys the local cuisine",
-		"brings up her ex-boyfriend",
-		"befriends a street urchin",
-		"adopts a stray cat",
-		"goes looking for adventure",
-		"pokes fun at the locals",
-		"complains about the detour",
-		"enjoys the scenery"
-	],
-	"hasPlaceProblem": [
-		"can't get anyone to understand her accent",
-		"is accosted by a creepy street preacher",
-		"steps in a mud puddle",
-		"locks herself out of the TARDIS",
-		"gets ripped off by a con artist",
-		"meets a mysterious woman in a shroud",
-		"is troubled by a strange statue",
-		"can't shake a strange feeling of dread",
-		"loses her phone",
-		"gets lost",
-		"#reactToPlace#"
-	],
-	"gettingIntoTrouble": [
-		"getting arrested",
-		"being kidnapped by #villains#",
-		"offending a powerful figure",
-		"running afoul of #villains#",
-		"walking right into a plot by #villains#"
-	],
-	"terribleSecret": [
-		"#villains# are planning an invasion",
-		"someone is stealing the children",
-		"something has drained the TARDIS's energy cells",
-		"#villains# are planning to open a portal to another universe",
-		"#villains# are living under the ground",
-		"#villains# are planning to kidnap him",
-		"#villains# are planning to get revenge",
-		"things are not what they seem",
-		"#villains# have enslaved the minds of nearly all the locals",
-		"#villains# have a plan to restart the Time War",
-		"#villains# and #villains# are working together"
-	],
-	"villains": [
-		"#classicVillains#",
-		"#proceduralAliens#",
-		"#proceduralAliens#"
-	],
-	"classicVillains": [
-		"the Daleks",
-		"the Daleks",
-		"the Cybermen",
-		"the Cybermen",
-		"Davros's #minions#",
-		"the Master's #minions#",
-		"the Dream Lords",
-		"the Fendahl",
-		"a trio of parallel universe Doctors turned evil",
-		"the Valeyard's #minions#",
-		"the Weeping Angels",
-		"Time Zombies",
-		"The Silence",
-		"the Ood",
-		"Plasmavores",
-		"the Sontarans",
-		"sentient mannequins"
-	],
-	"minions": [
-		"minions",
-		"henchmen",
-		"slaves",
-		"servants",
-		"clones",
-		"thugs",
-		"monsters",
-		"#alienAdj# things"
-	],
-	"proceduralAliens": [
-		"#alienAdj# #alienBaseType##optAlienModifier#"
-	],
-	"alienAdj": [
-		"slimy",
-		"oozey",
-		"invisible",
-		"half-reptile",
-		"hyperintelligent",
-		"blue",
-		"Venusian",
-		"super-fast",
-		"hairless",
-		"undead",
-		"de-phased",
-		"hideous",
-		"giant",
-		"bad CGI",
-		"razor-jawed",
-		"genetically altered"
-	],
-	"alienBaseType": [
-		"insect people",
-		"pigmen",
-		"robots",
-		"cyborgs",
-		"ratmen",
-		"aliens",
-		"ghosts",
-		"plant people",
-		"spiders",
-		"lawyers",
-		"brains",
-		"vampires",
-		"leech-things",
-		"land sharks",
-		"snake people",
-		"cat people",
-		"clones",
-		"zealots",
-		"psychics",
-		"shadows"
-	],
-	"optAlienModifier": [
-		"",
-		" #alienModifier#"
-	],
-	"alienModifier": [
-		"#mod1#",
-		"#mod1#",
-		"#mod1# (#workingwith# #villains#)"
-	],
-	"workingwith": [
-		"working with",
-		"sent by",
-		"in collusion with",
-		"enslaved by"
-	],
-	"mod1": [
-		"who live backwards in time",
-		"from the future",
-		"from the distant past",
-		"from a dying Earth",
-		"with a grudge",
-		"(the last of their race)",
-		"with no sense of morality",
-		"with no sense of humor",
-		"(not seen since the last season)",
-		"who crave only pain",
-		"who feed off the nightmares of children",
-		"who hate the human race",
-		"with disturbingly long teeth",
-		"distilled from nightmares",
-		"(escapees from a Time Prison)",
-		"with glowing red eyes",
-		"with no faces",
-		"with a death ray",
-		"with a supernova bomb"
-	],
-	"actionBeat": [
-		"run down some corridors",
-		"cleverly escape from a prison cell",
-		"get separated",
-		"enlist the help of a local #localperson#",
-		"recruit some local #localpeople#",
-		"are almost captured",
-		"narrowly escape a gruesome death"
-	],
-	"doctorSkill": [
-		"his wits",
-		"dashing good looks",
-		"his sonic screwdriver",
-		"his psychic link to the TARDIS",
-		"Gallifrean powers of self-control",
-		"his knowledge of quantum mathematics",
-		"his keen understanding of the human condition",
-		"math",
-		"his vast knowledge of alien psychology",
-		"something that looks like a gun at first but turns out not to be a gun",
-		"something not very well explained to do with love and psychic energy"
-	],
-	"mysteryThing": [
-		"#color.capitalize# #symbol.capitalize#",
-		"#evocativeWord#",
-		"#femaleFirstName# #thrillerWord#",
-		"#evocativeWord# #thrillerWord#"
-	],
-	"color": [
-		"red",
-		"blue",
-		"yellow",
-		"green",
-		"black",
-		"white"
-	],
-	"symbol": [
-		"square",
-		"star",
-		"sphere"
-	],
-	"evocativeWord": [
-		"Returning",
-		"Message",
-		"Pattern",
-		"Summoning",
-		"Destiny",
-		"Endgame",
-		"Nevertime",
-		"Oneness",
-		"Whisper",
-		"Death"
-	],
-	"thrillerWord": [
-		"Pardox",
-		"Parable",
-		"Quadrant",
-		"Element",
-		"Conundrum",
-		"Solution",
-		"Event",
-		"Conspiracy",
-		"Quorum",
-		"Diary",
-		"Intention",
-		"Secret",
-		"Identity",
-		"Concordance",
-		"Division",
-		"Incision",
-		"Countdown",
-		"#ordinal.capitalize#"
-	],
-	"localperson": [
-		"vicar",
-		"dog catcher",
-		"electrician",
-		"professor",
-		"historian",
-		"police officer",
-		"street artist",
-		"urchin",
-		"teenager",
-		"slacker",
-		"comic book fan",
-		"toymaker",
-		"street vendor"
-	],
-	"localpeople": [
-		"children",
-		"grad students",
-		"grandmothers",
-		"asylum inmates",
-		"paranormal investigators",
-		"police officers",
-		"bar patrons",
-		"artists",
-		"musicians",
-		"sports fans"
-	]
 
-}
-function generateString(rule) {
-  return expandRule(rule);
-}
+       
+        <div id="introduction-below">
+            <h2>What the Generator Does and Why</h2>
+                <p>Clanging may be better understood as a subtype of glossomania, despite the terms frequently being used interchangeably. Researchers Lecours and Vanier-Clément provide a helpful distinction between two types of glossomania: formal glossomania and semantic glossomania. Formal glossomania refers to associations based on the sound of words, which aligns with the definition of clanging. In contrast, semantic glossomania involves associations grounded in concepts or meanings rather than sound (Lecours and Vanier-Clément 524).</p>
+                <p>This is an important distinction to make, as the generator is deliberately set up to produce both types of associations by querying the Datamuse API for its vocabulary. On the first generation, the system:</p>
+                <ul>
+                <li>Picks a random origin rule from grammar.js</li>
+                <li>Expands template tags inline to find the first part-of-speech tag (e.g., #noun#, #verb#, #adjective#)</li>
+                <li>Selects a random word from the static grammar of that type as the initial seed</li>
+                </ul>
+                <p>Once the initial seed is selected, the generator proceeds with the API-driven word chaining. For each #noun#, #verb#, #adjective#, or #adverb# tag in the template, the generator fetches candidates from Datamuse by making one of two types of queries with the seed word:</p>
+                <ul>
+                <li>Sounds-like query (sl): Words that sound similar (phonetic association)</li>
+                <li>Related-target query (rel_trg): Semantically related words</li>
+                </ul>
+                <p>These correspond to formal and semantic glossomania respectively. The two types of queries have an equal chance of occurring. If one query returns no valid candidates, the other will be used as a fallback.</p>
+                <p>Beyond word association, the generator also simulates the creation of neologisms, or new words. The system's dynamic generateNeologism function models several of the core word-formation devices identified in linguistic research. The taxonomy from Lecours and Vanier-Clément guided the generator’s methods of producing neologisms as well:</p>
+                <ul>
+                <li>Phonemic Télescopage (Blending): The generator's blending function, which combines words based on shared sounds (e.g., animal + mammal → mamimal), is a direct implementation of what the authors call "phonemic télescopage" (518).</li>
+                <li>Composed Morphemic Paraphasias (Compounding): Combining two nouns or a seed word with an API-retrieved word corresponds to "composed morphemic paraphasias," which are new words made of two or more lexemes (519). The generator's logic for combining antonyms was particularly important to include, as the production of compounds from antonyms (e.g., day-night or "winter-summer") is described as "perhaps one of the most reliable indications of schizophasia" (532).</li>
+                <li>Derived Morphemic Paraphasias (Affixation): Adding prefixes and suffixes from the grammar lists to a seed word creates "derived morphemic paraphasias," which are new words built from a lexical root and an affix (519).</li>
+                <p>The traits described above are the source of the generator’s peculiar (for lack of a better word) output, but an equal, if not greater effort was made to ensure the sentences and words generated adhere to the rules of grammar, syntax, and morphology. The preservation of these foundational aspects of language was a common theme among the studies referenced for this project (Cohen et al. 1; Covington et al. 91; Kircher et al. 517; Radanovic et al. 57; Steuber 11-12).</p>
+            <h2>Source Material and Supplementary Examples</h2>
+            <p>Ultimately, the best way to understand the difficulties faced by individuals with this condition is by seeing their words in their original, unaltered form—a generator can never be fully true to life. This section includes a collection of excerpts from patient interviews and linguistic studies. The first set features the original transcriptions that were used as templates within the generator. The second set showcases additional examples from the research, offering further insights into how this disorder manifests.</p>
+            <h3>Transcripts Used in the Generator</h3>
+            <ul>
+                <li>“Then, I always liked geography. My last teacher in the subject was Professor August A. He was a man with black eyes. I also like black eyes. There are also blue and gray eyes and other sorts, too. I have heard it said that snakes have green eyes. All people have eyes. There are some, too, who are blind. These blind people are led by a boy. It must be terrible not to be able to see. There are people who can't see, and, in addition, can't hear. I know some who hear too much. One can hear too much. There are many sick people in Burgholzli; they are called patients.” (qtd. in Bleuler 579).</li>
+                <li>“Well, I wonder if that part of it can't be - I wonder if that doesn't - let me put it frankly; I wonder if that doesn't have to be continued? Let me put it this way: let us suppose you get the million bucks, and you get the proper way to handle it. You could hold that side?” (qtd. in Bleuler 579).</li>
+                <li>“A fish swims. You call it a salmon. You cook it. You put it in a can. You open the can. You look at it in this color. Salmon fish.” (qtd. in Covington et al. 94).</li>
+                <li>“If we need soap when you can jump into a pool of water, and then when you go to buy your gasoline, my folks always thought they should get pop, but the best thing is to get motor oil. . .” (qtd. in Covington et al. 91).</li>
+                <li>“Oh, it [life in a hospital] was superb, you know the trains broke, and the pond fell in the front doorway.” (Oh et al. 235)</li>
+                <li>“Thought for the day — The confrontation with always that of a phase swinging negative which holds purpose to penetrate the resistivity placed by the protective shell surrounding one's being must be experienced prior to one's true ability to radiate a written terminology for means of truely being helpful to another.” (Bleuler 601).</li>
+            </ul>
+            <h3>Additional Examples from Research</h3>
+            <ul>
+                <li>“If you think you are being wise to send me a bill for money I have already paid, I am in nowise going to do so unless I get the whys and wherefores from you to me. But where the fours have been, then fives will be, and other numbers and calculations and accounts to your no-account….” (qtd. in Kuperberg 578).</li>
+                <li>“They’re destroying too many cattle and oil just to make soap. If we need soap when you can jump into a pool of water, and then when you go to buy your gasoline, my folks always thought they should, get pop but the best thing to get, is motor oil, and, money. May may as well go there and, trade in some, pop caps and, uh, tires, and tractors to grup, car garages, so they can pull cars away from wrecks, is what I believe in. So I didn’t go there to get no more pop when my folks said it. I just went there to get a ice-cream cone, and some pop, in cans, or we can go over there to get a cigarette” (qtd. in Kuperberg 579).</li>
+                <li>“The essential of all work to be accomplished is a classification of work corresponding to the human physique. This is to say that the human, animal, and vegetal physique is classed, first of all, naturally, by the heavenly body. And the human classifies the heavenly body as well. These are perpetual classifications. . In order to make a country or a nation, it is necessary to occupy a stretch of territory. And, to occupy this stretch ofterritory, one ought to make several possible classifications. This is to say: one must subdivide this stretch into several communes that have” (Lecours and Vanier-Clément 543).</li>
+                <li>“Different functions. . . Let us say four communes of equilibrium by reference to the commune in the center. . . . . It classifies you, if you have prepared your four communes at the same time, from the periphery, an equilibrated classificatory basis. Why so? Because, at the center of this stretch, you have four communes that are at classificatory basis of equilibrium by reference to the center, is it not? . . . . At the rack of classification, there is a physical gauge, a gauging-is it not?-a gauge of classification to verify if one is the equilibrium. . . And i reclassify myself, and i gauge myself. . At the total of the fifteenth classification, the first is to the second, the second is to the first, and you have acquired . . . A basis of equilibrium. . . . . To state that grossly: the first of the year, i am at start-end: on the fifteenth of a month, i am in the middle; and at the thirty-first of the end of the year, i am at endstart.“. . . . Now, i feel myself perfectly equilibrated, perpendiculary. . . . . It is like that: one equilibrates and one has the charge of equilibrating the herd. And one becomes, at analytical psychiatry, a humano-animalist vegetarian psychiatrist. You understand? . . . . But one needs rythms of classification. . . And then, i begin the first classification: it gives me a sane man and a mad man.” (Lecours and Vanier-Clément 544).</li>
+                <li>“Six hundred hunters knowing how to hunt without dogs dried six hundred socks on six hundred dry stumps.” (Lecours and Vanier-Clément 524).</li>
+                <li>“Parents are the people that raise you. Anything that raises you can be a parent. Parents can be anything, material, vegetable, or mineral, that has taught you something. Parents would be the world of things that are alive, that are there. Rocks, a person can look at a rock and learn something from it, so that would be a parent.” (Steuber 17).</li>
+                <li>“Yeah, right. See, they take camp now but they can go to camp anytime, you know, so, they're, like, "Oh, you're going to go to, going to take me to camp?" And they don't really, they're not, like, thrilled about it. Uh, it's one of these little camps that they, you know, little center camps here, but, you know, they're, like, "Are you going to take us to camp?" I'm, like, "Yeah, I'll get up in a minute." And I'm just, like, ooh, "Do I want to get up now?" Sometimes I think my mom's house is possessed. Because we've heard horrors stories at her house. They, they've said that there was five dead bodies in the roof and when we first moved in the garage door, it was detached, and there was a big skull, like, spray painted on there. And some kind of weird writing and all. And they've always said that house was possessed. And my mom, she's at home, you know, we're all from up north, we were always very active. Very active. Walking, you know, always. We never depended on a car. And ever since we lived there, my mom, she does not move. She sits in her chair, stays there. And I, and, you know, she sleeps late sometimes. My dad is the same way. Because I've lived on my own before. We live with my mom now, but I've lived on my own and I was fine then. So, it's like when we're there, it's, like, you know, we just, like, uh, lazy like it's possessed with laziness or something. I don't know. Sometimes I feel like that. Just because hearing things and just seeing things about the house. So, I don't know. That might be part of it too. Maybe once we leave there everything will come together. Or maybe it's just the south is not for us in general, I don't know. But yeah.” (Steuber 48).</li>
+            </ul>
+            <h2>Works Cited</h2>
+            <p>Andreasen, Nancy C. “Thought, Language, and Communication Disorders.” Archives of General Psychiatry, vol. 36, no. 12, Nov. 1979, p. 1315. https://doi.org/10.1001/archpsyc.1979.01780120045006.</p>
+            <p>Bleuler, M. “Inconstancy of Schizophrenic Language and Symptoms.” Behavioral and Brain Sciences, vol. 5, no. 4, Dec. 1982, pp. 591–591. https://doi.org/10.1017/S0140525X00013698.</p>
+            <p>Cohen, B. D., Nachmani, G., Rosenberg, S. “Referent Communication Disturbances in Acute Schizophrenia.” Journal of Abnormal Psychology, vol. 83, no. 1, Feb. 1974, pp. 1–13.  https://doi.org/10.1037/h0036231.</p>
+            <p>Covington, Michael A., Congzhou He, Cati Brown, Lorina Naçi, Jonathan T. McClain, Bess Sirmon Fjordbak, James Semple, and John Brown. "Schizophrenia and the Structure of Language: The Linguist's View." Schizophrenia Research, vol. 77, no. 1, 2005, pp. 85-98, https://doi.org/10.1016/j.schres.2005.01.016.</p>
+            <p>Kircher, Tilo, Henrike Bröhl, Felicitas Meier, and Jennifer Engelen. "Formal Thought Disorders: From Phenomenology to Neurobiology." The Lancet Psychiatry, vol. 5, no. 6, June 2018, pp. 515-26, https://doi.org/10.1016/S2215-0366(18)30059-2.</p>
+            <p>Kuperberg, Gina R. “Language in Schizophrenia Part 1: An Introduction.” Language and Linguistics Compass, vol. 4, no. 8, Aug. 2010, pp. 576–89.  https://doi.org/10.1111/j.1749-818X.2010.00216.x.</p>
+            <p>Lecours, AndréRoch, and Marie Vanier-Clément. “Schizophasia and Jargonaphasia.” Brain and Language, vol. 3, no. 4, Oct. 1976, pp. 516–65.  https://doi.org/10.1016/0093-934X(76)90046-8.</p>
+            <p>Niedźwiadek, Sylwia, and Agata Szulc. “Schizophasia and Cognitive Impairment in Schizophrenia: A Literature Review.” Brain Sciences, vol. 15, no. 1, Dec. 2024, p. 25.  https://doi.org/10.3390/brainsci15010025.</p>
+            <p>Oh, T. M., R. A. McCarthy, and P. J. McKenna. “Is There a Schizophasia? A Study Applying the Single Case Approach to Formal Thought Disorder in Schizophrenia.” Neurocase, vol. 8, no. 3, June 2002, pp. 233–44, https://doi.org/10.1093/neucas/8.3.233.</p>
+            <p>Radanovic, Marcia, Rafael T. de Sousa, Leandro L. Valiengo, Wagner Farid Gattaz, and Orestes Vicente Forlenza. "Formal Thought Disorder and Language Impairment in Schizophrenia." Arquivos de Neuro-Psiquiatria, vol. 71, no. 1, 2013, pp. 55-60.  https://doi.org/10.1590/S0004-282X2012005000015.</p>
+            <p>Steuber, Lucas Carl. Disordered Thought, Disordered Language: A Corpus-Based Description of the Speech of Individuals Undergoing Treatment for Schizophrenia. 2011. Portland State University, Master's thesis. https://doi.org/10.15760/etd.63.</p>
+        </div>
+        </div>
 
-function expandRule(rule) {
-  var result = rule;
-  var match = /#(\w+(?:\.\w+)*)#/.exec(result);
-  while (match) {
-    var tag = match[1];
-    var replacement = handleTag(tag);
-    result = result.replace(match[0], replacement);
-    match = /#(\w+(?:\.\w+)*)#/.exec(result);
-  }
-  return result;
-}
+    </div>
 
-function handleTag(tag) {
-  var parts = tag.split('.');
-  var key = parts[0];
-  var modifiers = parts.slice(1);
-  
-  if (!obj[key]) return "#" + tag + "#";
-  
-  var selected = obj[key][Math.floor(Math.random() * obj[key].length)];
-  var result = expandRule(selected);
-  
-  // Apply modifiers
-  if (modifiers.includes('capitalize') && result.length > 0) {
-    result = result.charAt(0).toUpperCase() + result.slice(1);
-  }
-  
-  return result;
-}
+    <div id="modal-overlay">
+        <div id="modal-content">
+            <button id="modal-close-btn">&times;</button>
+            <h3>Generation Diagnostics</h3>
+            <pre id="diagnostics"></pre>
+        </div>
+    </div>
 
-function displayString() {
-    var randomIndex = Math.floor(Math.random() * obj.origin.length);
-    document.getElementById('text-container').innerHTML = generateString(obj.origin[randomIndex]);
-}
 
-    displayString();  // call once at the beginning
-    setInterval(displayString, 30000);  // call every 30 seconds
-            // Get the modal
-            var modal = document.getElementById("myModal");
+    <script src="tracery-tracery2/js/tracery/tracery.js"></script>
+    
+    
+    <script src="tracery-tracery2/js/tracery/mods-eng-basic.js"></script>
 
-            // Get the <span> element that closes the modal
-            var span = document.getElementsByClassName("close")[0];
 
-            // When the user clicks on <span> (x), close the modal
-            span.onclick = function() {
-                modal.style.display = "none";
+    <script src="grammar.js"></script>
+    
+
+    <script>
+
+        if (typeof myGrammar === 'undefined') {
+            document.getElementById('output').textContent = "Error: 'myGrammar' object not found in grammar.js. Make sure the file is loaded and the variable is named correctly.";
+        }
+
+        // CONFIGURATION 
+        const config = {
+            MIN_ACCEPT: 3,
+            FREQUENCY_THRESHOLD: 2.0,
+            STOPWORDS: new Set([
+                'a','the','of','in','on','to','and','but','or','for','yet','so','because',
+                'ip','www','http','https','com','net','org'
+            ]),
+            NEO_WEIGHTS: { blend: 0.4, compound: 0.4, affix: 0.1, antonym: 0.05, phonotactic: 0.05 },
+            NEO_TOP_K: 6,
+            NEO_MIN_LEN: 3
+        };
+
+        // INITIAL STATE
+        let lastSeedWord = null;
+        let isFirstGeneration = true;
+
+        // CUSTOM TRACERY MODIFIERS
+        // modifier that uppercases the first alphabetical character (necessary since sentence parts are interchanged)
+        baseEngModifiers.capitalizeFirst = function(s) {
+            if (typeof s !== "string" || s.length === 0) return s;
+            // Find the first ASCII letter and uppercase it; preserve leading punctuation/quotes
+            return s.replace(/^([^A-Za-z]*)([A-Za-z])/, function(_, lead, first) {
+                return lead + first.toUpperCase();
+            });
+        };
+        
+        // superlatives
+        baseEngModifiers.superlative = function(s) {
+            if (typeof s !== "string" || s.length === 0) return s;
+            const orig = s;
+            const lower = s.toLowerCase();
+
+            // common irregulars
+            const irregular = {
+                good: 'best',
+                well: 'best',
+                bad: 'worst',
+                far: 'farthest',
+                little: 'least',
+                much: 'most',
+                many: 'most'
+            };
+            if (irregular[lower]) return irregular[lower];
+
+            // If it's very short, just add -est
+            if (lower.length <= 2) return lower + 'est';
+
+            // y -> iest (happy -> happiest)
+            if (lower.endsWith('y') && !/[aeiou]y$/.test(lower)) {
+                const out = lower.slice(0, -1) + 'iest';
+                return preserveCase(orig, out);
             }
 
-            // When the user clicks anywhere outside of the modal, close it
-            window.onclick = function(event) {
-                if (event.target == modal) {
-                    modal.style.display = "none";
+            // CVC doubling for short monosyllables (run -> runnest)
+            if (/[b-df-hj-np-tv-z][aeiou][b-df-hj-np-tv-z]$/.test(lower) && lower.length <= 4) {
+                const out = lower + lower.charAt(lower.length - 1) + 'est';
+                return preserveCase(orig, out);
+            }
+
+            // if word is likely monosyllabic (few vowels), add -est
+            const vowelCount = (lower.match(/[aeiou]/g) || []).length;
+            if (vowelCount <= 1 && lower.length <= 7) {
+                const out = lower + 'est';
+                return preserveCase(orig, out);
+            }
+
+            // otherwise use 'most <adj>'
+            return preserveCase(orig, 'most ' + lower);
+        };
+
+        function preserveCase(orig, formed) {
+            if (!orig || orig.length === 0) return formed;
+            const firstChar = orig.charAt(0);
+            if (firstChar === firstChar.toUpperCase())
+                return formed.charAt(0).toUpperCase() + formed.slice(1);
+            return formed;
+        }
+
+        // Improve plural (.s) formation a bit
+        baseEngModifiers.s = function(orig) {
+            if (typeof orig !== 'string' || orig.length === 0) return orig;
+            const lower = orig.toLowerCase();
+
+            // If it already appears inflected, return as-is
+            if (/(ed|ing)$/.test(lower)) return orig;
+            if (lower.endsWith('s')) return orig;
+
+            // Handle common endings that require -es
+            if (/([cs]h|ss|x|z|o)$/.test(lower)) {
+                return preserveCase(orig, lower + 'es');
+            }
+
+            // y -> ies (if consonant + y)
+            if (/[^aeiou]y$/.test(lower)) {
+                return preserveCase(orig, lower.slice(0, -1) + 'ies');
+            }
+
+            // default: add 's'
+            return preserveCase(orig, lower + 's');
+        };
+
+        baseEngModifiers.a = function(orig) {
+            if (typeof orig !== 'string' || orig.length === 0) return orig;
+            const lower = orig.toLowerCase();
+
+            if (/s$/.test(lower) && !/ss$/.test(lower)) {
+                return preserveCase(orig, lower);
+            }
+
+            const useAn = (
+                /^[aeiou]/.test(lower) && 
+                !/^u[ns]/.test(lower) && 
+                !/^eu/.test(lower) && 
+                !/^one/.test(lower)
+            ) || 
+            /^[fhlmnrsx]$/.test(lower) || 
+            /^hour/.test(lower) || 
+            /^honest/.test(lower) || 
+            /^honor/.test(lower) || 
+            /^heir/.test(lower) ||
+            /^8/.test(lower) ||
+            /^11/.test(lower) ||
+            /^18/.test(lower);
+
+            const article = useAn ? 'an ' : 'a ';
+            return preserveCase(orig, article + lower);
+        };
+
+        // Improve past-tense (.ed) formation a bit
+        baseEngModifiers.ed = function(orig) {
+            if (typeof orig !== 'string' || orig.length === 0) return orig;
+            const lower = orig.toLowerCase();
+            if (/(ed)$/.test(lower)) return orig;
+            if (lower.endsWith('e')) return preserveCase(orig, lower + 'd');
+            // naive doubling not implemented; just append 'ed'
+            return preserveCase(orig, lower + 'ed');
+        };
+
+        // FUNCTIONS
+
+        // Recursively expands a grammar rule to find the first API-backed part of speech.
+        function findFirstApiTag(rule) {
+            const apiTags = new Set(['noun','adjective','verb','adverb','neologism']);
+            const tagRegex = /#([^#.]+)(?:\.[^#]+)?#/g;
+            let currentText = rule;
+            let safetyCounter = 0;
+
+            while (safetyCounter < 50) {
+                safetyCounter++;
+                tagRegex.lastIndex = 0;
+                let match;
+                let expanded = false;
+                while ((match = tagRegex.exec(currentText))) {
+                    const name = match[1];
+                    if (apiTags.has(name)) {
+                        return name;
+                    }
+                    if (myGrammar[name] && Array.isArray(myGrammar[name]) && myGrammar[name].length > 0) {
+                        const choice = myGrammar[name][Math.floor(Math.random() * myGrammar[name].length)];
+                        currentText = currentText.slice(0, match.index) + choice + currentText.slice(tagRegex.lastIndex);
+                        expanded = true;
+                        break;
+                    }
+                }
+                if (!expanded) return null;
+            }
+            return null;
+        }
+
+        function filterWords(data, partOfSpeech, minLen = 3) {
+            const isAlphaWord = (w) => /^[A-Za-z\-']+$/.test(w);
+            const isStaticNoun = (word) => myGrammar.noun.includes(word.toLowerCase());
+            const isInflected = (w) => /(?:ed|ing|s)$/.test(w.toLowerCase());
+            const isPlural = (w) => /s$/.test(w.toLowerCase()) && !/ss$/.test(w.toLowerCase());
+
+            const baseVerbs = [];
+            const inflectedVerbs = [];
+            const results = [];
+            
+            for (const item of data) {
+                if (!item || !item.word || !item.tags) continue;
+                
+                const tags = item.tags;
+                if (!tags.includes(partOfSpeech)) continue;
+
+                const freqTag = tags.find(t => t.startsWith('f:'));
+                if (!freqTag) continue;
+                const frequency = parseFloat(freqTag.substring(2));
+                if (isNaN(frequency) || frequency < config.FREQUENCY_THRESHOLD) continue;
+
+                const w = item.word;
+                if (!isAlphaWord(w) || w.length < minLen || config.STOPWORDS.has(w.toLowerCase())) continue;
+                
+                if (partOfSpeech === 'v') {
+                    if (isStaticNoun(w)) continue;
+                    if (tags.includes('adj')) continue;
+                    if (tags.includes('n') && !myGrammar.verb.includes(w.toLowerCase()) && frequency < 4.5) continue;
+                    
+                    const candidate = { word: w, tags, frequency };
+                    if (isInflected(w)) {
+                        inflectedVerbs.push(candidate);
+                    } else {
+                        baseVerbs.push(candidate);
+                    }
+                } else if (partOfSpeech === 'n') {
+                    if (isPlural(w)) continue;
+                    results.push({ word: w, tags, frequency });
+                } else {
+                    results.push({ word: w, tags, frequency });
                 }
             }
 
-            // Function to display the about modal
-            function displayAbout() {
-                modal.style.display = "block";
+            if (partOfSpeech === 'v') {
+                return baseVerbs.length > 0 ? baseVerbs : inflectedVerbs;
             }
-		    function goFullscreen() {
-        if (document.documentElement.requestFullscreen) {
-            document.documentElement.requestFullscreen();
-        } else if (document.documentElement.mozRequestFullScreen) { // Firefox
-            document.documentElement.mozRequestFullScreen();
-        } else if (document.documentElement.webkitRequestFullscreen) { // Chrome, Safari and Opera
-            document.documentElement.webkitRequestFullscreen();
-        } else if (document.documentElement.msRequestFullscreen) { // IE/Edge
-            document.documentElement.msRequestFullscreen();
+            return results;
         }
-    }
 
-    
-</script>
+        // Fetches and filters new words from the Datamuse API based on a seed word.
+        async function fetchAndFilterWords(seed, targetPos) {
+            const cleanedSeed = (seed || '').toString().replace(/^[^A-Za-z']+|[^A-Za-z']+$/g, '');
+            const encodedSeed = encodeURIComponent(cleanedSeed);
+
+            const slUrl = `https://api.datamuse.com/words?sl=${encodedSeed}&md=pf`;
+            const trgUrl = `https://api.datamuse.com/words?rel_trg=${encodedSeed}&md=pf`;
+
+            const [slResp, trgResp] = await Promise.all([fetch(slUrl), fetch(trgUrl)]);
+            if (!slResp.ok) throw new Error(`API request failed: ${slResp.status}`);
+            if (!trgResp.ok) throw new Error(`API request failed: ${trgResp.status}`);
+            const [slData, trgData] = await Promise.all([slResp.json(), trgResp.json()]);
+
+            const sl = {
+                noun: filterWords(slData, 'n'),
+                adjective: filterWords(slData, 'adj'),
+                verb: filterWords(slData, 'v'),
+                adverb: filterWords(slData, 'adv')
+            };
+            const trg = {
+                noun: filterWords(trgData, 'n'),
+                adjective: filterWords(trgData, 'adj'),
+                verb: filterWords(trgData, 'v'),
+                adverb: filterWords(trgData, 'adv')
+            };
+
+            const words = {
+                noun: sl.noun.length ? sl.noun : trg.noun,
+                adjective: sl.adjective.length ? sl.adjective : trg.adjective,
+                verb: sl.verb.length ? sl.verb : trg.verb,
+                adverb: sl.adverb.length ? sl.adverb : trg.adverb
+            };
+
+            const sourceByPos = {
+                noun: sl.noun.length ? 'sl' : (trg.noun.length ? 'rel_trg' : 'none'),
+                adjective: sl.adjective.length ? 'sl' : (trg.adjective.length ? 'rel_trg' : 'none'),
+                verb: sl.verb.length ? 'sl' : (trg.verb.length ? 'rel_trg' : 'none'),
+                adverb: sl.adverb.length ? 'sl' : (trg.adverb.length ? 'rel_trg' : 'none')
+            };
+
+            const diagnostics = {
+                cleanedSeed,
+                slCounts: {
+                    rawResults: slData.length,
+                    nouns: sl.noun.length,
+                    adjectives: sl.adjective.length,
+                    verbs: sl.verb.length,
+                    adverbs: sl.adverb.length
+                },
+                trgCounts: {
+                    rawResults: trgData.length,
+                    nouns: trg.noun.length,
+                    adjectives: trg.adjective.length,
+                    verbs: trg.verb.length,
+                    adverbs: trg.adverb.length
+                },
+                candidateCounts: {
+                    nouns: words.noun.length,
+                    adjectives: words.adjective.length,
+                    verbs: words.verb.length,
+                    adverbs: words.adverb.length
+                },
+                sourceByPos
+            };
+            
+            return { words, diagnostics, sl, trg };
+        }
+        
+        // Seed-aware neologisms with weighted methods (blend/compound/affix/antonym/phonotactic).
+        function __neo_randChoice(arr) { if (!arr || arr.length === 0) return null; return arr[Math.floor(Math.random() * arr.length)]; }
+        function __neo_chooseWeighted(weights) { const keys = Object.keys(weights); let r = Math.random(), a = 0; for (const k of keys) { a += weights[k]; if (r < a) return k; } return keys[0]; }
+        function __neo_combinePools() { const map = new Map(); for (let i = 0; i < arguments.length; i++) { const list = arguments[i]; if (!list) continue; for (const c of list) { if (!c || !c.word) continue; const w = c.word.toLowerCase(); if (!map.has(w) || (c.frequency || 0) > (map.get(w).frequency || 0)) map.set(w, c); } } return Array.from(map.values()); }
+        function __neo_sampleTopK(list, k) { if (!list || list.length === 0) return null; const sorted = list.slice().sort((a, b) => (b.frequency || 0) - (a.frequency || 0)); const m = Math.min(k, sorted.length); return sorted[Math.floor(Math.random() * m)]; }
+        function __neo_lastVowelIndex(s) { for (let i = s.length - 1; i >= 0; i--) { if (/[aeiou]/i.test(s[i])) return i; } return -1; }
+        function __neo_firstVowelIndex(s) { for (let i = 0; i < s.length; i++) { if (/[aeiou]/i.test(s[i])) return i; } return -1; }
+        function __neo_smoothJoin(a, b) { if (!a) return b; if (!b) return a; const la = a[a.length - 1]; const fb = b[0]; if (la === fb) return a + b.slice(1); return a + b; }
+        function __neo_shouldHyphenate(a, b) { const end = a.slice(-2), start = b.slice(0, 2); return (/[^aeiou]{2}/i.test(end) && /[^aeiou]{2}/i.test(start)); }
+        function __neo_blend(a, b) { const maxL = Math.min(a.length, b.length); for (let l = maxL; l >= 2; l--) { if (a.slice(-l).toLowerCase() === b.slice(0, l).toLowerCase()) return a + b.slice(l); } const ia = __neo_lastVowelIndex(a); const ib = __neo_firstVowelIndex(b); if (ia !== -1 && ib !== -1) return a.slice(0, ia + 1) + b.slice(ib); return __neo_smoothJoin(a, b); }
+        function __neo_randomCV(len) { const C = 'bcdfghjklmnpqrstvwxyz', V = 'aeiou'; let s = ''; for (let i = 0; i < len; i++) s += (i % 2 === 0 ? C[Math.floor(Math.random() * C.length)] : V[Math.floor(Math.random() * V.length)]); return s; }
+        async function __neo_fetchAntonyms(seed) { const cleaned = (seed || '').toString().replace(/^[^A-Za-z']+|[^A-ZaZ']+$/g, ''); const enc = encodeURIComponent(cleaned); const url = `https://api.datamuse.com/words?rel_ant=${enc}&md=pf`; const resp = await fetch(url); if (!resp.ok) return []; const data = await resp.json(); const out = []; for (const item of data) { if (!item || !item.word || !item.tags) continue; const tags = item.tags; if (!(tags.includes('n') || tags.includes('adj') || tags.includes('v'))) continue; const fTag = tags.find(t => t.startsWith('f:')); const freq = fTag ? parseFloat(fTag.substring(2)) : 0; if (isNaN(freq) || freq < config.FREQUENCY_THRESHOLD) continue; if (!/^[A-Za-z\-']+$/.test(item.word)) continue; out.push({ word: item.word, tags, frequency: freq }); } return out; }
+        async function generateNeologism(seed) { const res = await fetchAndFilterWords(seed, 'noun'); const pool = __neo_combinePools(res.sl.noun, res.sl.adjective, res.sl.verb, res.trg.noun, res.trg.adjective, res.trg.verb); const chosen = __neo_sampleTopK(pool, config.NEO_TOP_K); const base = (seed || '').toString(); let method = __neo_chooseWeighted(config.NEO_WEIGHTS); let out = null; let details = { seed: base, candidate: chosen ? chosen.word : null, method }; if (method === 'blend' && chosen) { const dir = Math.random() < 0.5; out = dir ? __neo_blend(base, chosen.word) : __neo_blend(chosen.word, base); } else if (method === 'compound' && chosen) { const dir = Math.random() < 0.5; const a = dir ? base : chosen.word; const b = dir ? chosen.word : base; const hy = __neo_shouldHyphenate(a, b); out = hy ? (a + '-' + b) : __neo_smoothJoin(a, b); details.hyphenated = hy; } else if (method === 'affix') { const doPrefix = Math.random() < 0.5; if (doPrefix && Array.isArray(myGrammar.prefix) && myGrammar.prefix.length > 0) { const p = __neo_randChoice(myGrammar.prefix); out = p + base; details.prefix = p; } else { const sufList = Array.isArray(myGrammar.nounifyingSuffix) && myGrammar.nounifyingSuffix.length > 0 ? myGrammar.nounifyingSuffix : (Array.isArray(myGrammar.suffix) ? myGrammar.suffix : []); if (sufList.length > 0) { const s = __neo_randChoice(sufList); out = base + s; details.suffix = s; } } } else if (method === 'antonym') { const ants = await __neo_fetchAntonyms(base); const ant = __neo_sampleTopK(ants, config.NEO_TOP_K); if (ant) { out = base + '-' + ant.word; details.antonym = ant.word; } } else if (method === 'phonotactic') { const len = Math.random() < 0.5 ? 2 : 3; const frag = __neo_randomCV(len); const pre = Math.random() < 0.5; out = pre ? __neo_smoothJoin(frag, base) : __neo_smoothJoin(base, frag); details.phon = frag; details.position = pre ? 'pre' : 'post'; }
+            if (!out || out.length < config.NEO_MIN_LEN) { if (chosen) { const a = base, b = chosen.word; const hy = __neo_shouldHyphenate(a, b); out = hy ? (a + '-' + b) : __neo_smoothJoin(a, b); details.method = 'compound_fallback'; details.hyphenated = hy; } else { const list = Array.isArray(myGrammar.neologism) ? myGrammar.neologism : [base]; out = list[Math.floor(Math.random() * list.length)]; details.method = 'static_fallback'; } }
+            return { word: out, method: details.method || method, details };
+        }
+        
+
+        // Applies all post-processing cleanup rules to the generated text.
+
+        function postProcessOutput(text) {
+            return text
+                .replace(/\bi'm\b/gi, "I'm")
+                .replace(/\bi've\b/gi, "I've")
+                .replace(/\bi'll\b/gi, "I'll")
+                .replace(/\bi'd\b/gi, "I'd")
+                .replace(/\bi\b/g, "I")
+                .replace(/\b(a|the)\s+\1\b/gi, "$1")
+                .replace(/\ba the\b/gi, "the")
+                .replace(/\bis a[\s\S]*?[\.\?!]/gi, match => {
+                    if (/\bis a[\.!?]$/i.test(match.trim())) return match.replace(/\ba\b/i, '').replace(/\s+\./, '.');
+                    return match;
+                })
+                .replace(/\s*\.{3,}/g, '...') 
+                .replace(/([?!])\1+/g, '$1'); 
+        }
+
+        function applyModifier(word, modifier) {
+            if (!modifier || !baseEngModifiers[modifier]) {
+                return word;
+            }
+            return baseEngModifiers[modifier](word);
+        }
+        
+        function chooseCandidateForPos(candidates, pos) {
+            if (!candidates || candidates.length === 0) return null;
+
+            let pool = candidates;
+
+            if (pos === 'verb') {
+                const vOnly = [];
+                const vNotN = [];
+                for (const c of candidates) {
+                    const tags = c.tags;
+                    if (tags.includes('v')) {
+                        if (!tags.includes('n') && !tags.includes('adj') && !tags.includes('adv')) {
+                            vOnly.push(c);
+                        } else if (!tags.includes('n')) {
+                            vNotN.push(c);
+                        }
+                    }
+                }
+                pool = vOnly.length > 0 ? vOnly : (vNotN.length > 0 ? vNotN : candidates);
+            } else if (pos === 'adverb') {
+                const advOnly = candidates.filter(c => c.tags.includes('adv') && !c.tags.includes('adj'));
+                if (advOnly.length > 0) pool = advOnly;
+            } else if (pos === 'adjective') {
+                const adjOnly = [];
+                const adjNotV = [];
+                for (const c of candidates) {
+                    const tags = c.tags;
+                    if (tags.includes('adj')) {
+                        if (!tags.includes('n') && !tags.includes('v') && !tags.includes('adv')) {
+                            adjOnly.push(c);
+                        } else if (!tags.includes('v')) {
+                            adjNotV.push(c);
+                        }
+                    }
+                }
+                pool = adjOnly.length > 0 ? adjOnly : (adjNotV.length > 0 ? adjNotV : candidates);
+            } else if (pos === 'noun') {
+                const nOnly = [];
+                const nNotV = [];
+                for (const c of candidates) {
+                    const tags = c.tags;
+                    if (tags.includes('n')) {
+                        if (!tags.includes('v') && !tags.includes('adj')) {
+                            nOnly.push(c);
+                        } else if (!tags.includes('v')) {
+                            nNotV.push(c);
+                        }
+                    }
+                }
+                pool = nOnly.length > 0 ? nOnly : (nNotV.length > 0 ? nNotV : candidates);
+            }
+
+            pool = pool.slice().sort((a, b) => (b.frequency || 0) - (a.frequency || 0));
+
+            const k = Math.min(6, pool.length);
+            const idx = Math.floor(Math.random() * k);
+            return pool[idx];
+        }
+
+        // Asynchronous sentence generation function that processes one tag at a time
+
+        async function generateSentenceStepByStep(rule, initialSeed) {
+            let currentText = rule;
+            let currentSeed = initialSeed;
+            let lastApiSeed = null;
+            const stepDiagnostics = []; // Array to hold diagnostics for each step
+            const tagRegex = /#([^#.]+)(?:\.([^#]+))?#/;
+            const apiTags = new Set(['noun', 'adjective', 'verb', 'adverb']);
+            let safetyCounter = 0; // Prevents infinite loops in grammar
+
+            let match;
+            while ((match = currentText.match(tagRegex)) && safetyCounter < 100) {
+                safetyCounter++;
+                const fullTag = match[0];
+                const ruleName = match[1];
+                const modifier = match[2];
+                
+                let replacement = `((${ruleName}?))`; // Default for unfound rules
+
+                // Check if the tag is a fundamental part of speech that needs an API call
+                if (apiTags.has(ruleName)) {
+                    const result = await fetchAndFilterWords(currentSeed, ruleName);
+
+                    let chosenWord;
+                    let chosenCandidate = null;
+                    let chosenSourceName = null;
+
+                    const preferSl = Math.random() < 0.5;
+                    let pool = preferSl ? result.sl[ruleName] : result.trg[ruleName];
+                    chosenSourceName = preferSl ? 'sl' : 'rel_trg';
+                    if (!pool || pool.length === 0) {
+                        pool = preferSl ? result.trg[ruleName] : result.sl[ruleName];
+                        chosenSourceName = preferSl ? 'rel_trg' : 'sl';
+                    }
+
+                    if (pool && pool.length > 0) {
+                        chosenCandidate = chooseCandidateForPos(pool, ruleName);
+                        if (chosenCandidate) chosenWord = chosenCandidate.word;
+                    }
+                    if (!chosenWord) {
+                        const fallbackList = myGrammar[ruleName] || ["word"];
+                        chosenWord = fallbackList[Math.floor(Math.random() * fallbackList.length)];
+                    }
+
+                    replacement = chosenWord;
+                    // The seed for the next step in the sentence is updated.
+                    currentSeed = chosenWord; 
+                    // Track this as the last valid seed for the next sentence.
+                    lastApiSeed = chosenWord;
+
+                    const diag = result.diagnostics;
+                    diag.ruleName = ruleName;
+                    diag.chosen = {
+                        word: chosenWord,
+                        from: chosenCandidate ? (chosenSourceName || 'api') : 'fallback',
+                        tags: chosenCandidate ? chosenCandidate.tags : null,
+                        frequency: chosenCandidate ? chosenCandidate.frequency : null
+                    };
+                    stepDiagnostics.push(diag);
+
+                } else if (ruleName === 'neologism') {
+                    let chosenWord = null;
+                    let neoDiag = null;
+                    try {
+                        const neo = await generateNeologism(currentSeed);
+                        chosenWord = neo.word;
+                        neoDiag = neo;
+                    } catch (e) {}
+                    if (!chosenWord) {
+                        const ruleOptions = myGrammar[ruleName];
+                        chosenWord = Array.isArray(ruleOptions) && ruleOptions.length > 0 ? ruleOptions[Math.floor(Math.random() * ruleOptions.length)] : 'word';
+                    }
+                    replacement = chosenWord;
+                    currentSeed = chosenWord;
+                    lastApiSeed = chosenWord;
+                    const diag = { ruleName, chosen: { word: chosenWord, from: 'neologism-' + (neoDiag ? neoDiag.method : 'static'), tags: null, frequency: null }, neologism: neoDiag ? neoDiag.details : null };
+                    stepDiagnostics.push(diag);
+
+                // Otherwise, treat it as a rule to be expanded from the grammar file.
+                } else if (myGrammar[ruleName] && Array.isArray(myGrammar[ruleName])) {
+                    const ruleOptions = myGrammar[ruleName];
+                    replacement = ruleOptions[Math.floor(Math.random() * ruleOptions.length)];
+                }
+
+                // Apply any modifiers to the chosen replacement.
+                const modifiedReplacement = applyModifier(replacement, modifier);
+
+                // Replace the tag in the text. The loop will continue to expand any new tags.
+                currentText = currentText.replace(fullTag, modifiedReplacement);
+            }
+
+            // Return an object containing the text, the seed, and the new diagnostics array.
+            return { text: currentText, lastSeed: lastApiSeed, diagnostics: stepDiagnostics };
+        }
 
 
-<iframe id="IgP8dKVP" frameborder="0" src="./grammar2_files/translateSandbox.html" style="width: 0px; height: 0px; display: none;"></iframe></body></html>
+        //  MAIN GENERATOR FUNCTION
+        async function generate() {
+            const outputEl = document.getElementById('output');
+            const buttonEl = document.getElementById('generateBtn');
+            
+            if (isFirstGeneration) {
+                outputEl.innerHTML = '';
+                isFirstGeneration = false;
+            }
+            
+            buttonEl.disabled = true;
+            let diagnostics = {};
+
+            try {
+                const originRule = myGrammar.origin[Math.floor(Math.random() * myGrammar.origin.length)];
+                let seedWord;
+
+                if (!lastSeedWord) {
+                    const firstTagType = findFirstApiTag(originRule);
+                    
+                    // Add the result of the expansion to the diagnostics log
+                    diagnostics.coldStartAnalysis = {
+                        foundTag: firstTagType || 'none (defaulting to noun)',
+                        finalSeedType: 'noun' // Set default
+                    };
+
+                    let seedType = 'noun'; // Default to noun if no tag is found after expansion.
+                    if (firstTagType) {
+                        // If the tag is neologism, use a noun as its base for seeding.
+                        seedType = firstTagType === 'neologism' ? 'noun' : firstTagType;
+                    }
+                    
+                    // Update diagnostics with the final decision.
+                    diagnostics.coldStartAnalysis.finalSeedType = seedType;
+
+                    const seedList = myGrammar[seedType] || myGrammar.noun;
+                    seedWord = seedList[Math.floor(Math.random() * seedList.length)];
+                } else {
+                    seedWord = lastSeedWord;
+                }
+
+                diagnostics.initialSeedWord = seedWord;
+                diagnostics.originRule = originRule;
+
+                // Generate text using the step-by-step function
+                const generationResult = await generateSentenceStepByStep(originRule, seedWord);
+                let outputText = generationResult.text;
+                diagnostics.steps = generationResult.diagnostics; 
+                
+                //  Post-process
+                outputText = postProcessOutput(outputText);
+
+                // Update UI and select next seed word
+                const newEntry = document.createElement('div');
+                newEntry.textContent = outputText;
+                outputEl.appendChild(newEntry);
+                outputEl.scrollTop = outputEl.scrollHeight;
+                
+                // Use the last API-generated word as the next seed.
+                // If none was generated fall back to the last word of the output.
+                if (generationResult.lastSeed) {
+                    lastSeedWord = generationResult.lastSeed;
+                } else {
+                    const words = outputText.replace(/\p{P}+/gu, "").split(' ').filter(w => w.trim().length > 0);
+                    lastSeedWord = words.length > 0 ? words[words.length - 1] : seedWord; // Fallback to old seed if sentence is empty
+                }
+
+                diagnostics.cleanedOutput = outputText;
+                diagnostics.nextSeedWord = lastSeedWord;
+
+            } catch (error) {
+                outputEl.textContent = "Sorry, an error occurred: " + error.message;
+                console.error(error);
+            } finally {
+                const diagEl = document.getElementById('diagnostics');
+                // Update the diagnostics content regardless of whether the modal is visible
+                if (diagEl) {
+                    diagEl.textContent = JSON.stringify(diagnostics, null, 2);
+                }
+                buttonEl.disabled = false;
+            }
+        }
+
+        // UI
+        window.addEventListener('load', () => {
+            const modalOverlay = document.getElementById('modal-overlay');
+            const diagBtn = document.getElementById('diagBtn');
+            const closeBtn = document.getElementById('modal-close-btn');
+
+            if (diagBtn) {
+                diagBtn.onclick = () => {
+                    if (modalOverlay) modalOverlay.classList.add('visible');
+                };
+            }
+
+            if (closeBtn) {
+                closeBtn.onclick = () => {
+                    if (modalOverlay) modalOverlay.classList.remove('visible');
+                };
+            }
+
+            if (modalOverlay) {
+                // Also close the modal if the user clicks on the dark background
+                modalOverlay.onclick = (event) => {
+                    if (event.target === modalOverlay) {
+                        modalOverlay.classList.remove('visible');
+                    }
+                };
+            }
+            
+
+        });
+    </script>
+</body>
+</html>
