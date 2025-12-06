@@ -2,7 +2,7 @@
 ---
 @font-face {
   font-family: 'Mx437_MBytePC230_EGA';
-  src: url({{ '/assets/fonts/Web437_MBytePC230_EGA.woff' | relative_url }}) format('woff');
+  src: url({{ 'assets/fonts/Web437_OlivettiThin_8x16.woff' | relative_url }}) format('woff');
 }
 
 @font-face {
@@ -13,7 +13,7 @@
 body {
   font-family: 'Mx437_MBytePC230_EGA';
   line-height: 1.3;
-  font-size: 20px;
+  font-size: 22px;
   margin: 0; 
   color: #333;
   image-rendering: pixelated; 
@@ -68,7 +68,7 @@ body::before {
 }
 
 main {
-    width: 1060px;
+    width: 1100px;
     /* height: 640px; */
     /* padding: 2rem; */
     box-sizing: border-box;
